@@ -22,6 +22,9 @@ public:
     //==============================================================================
     MidiDiffAudioProcessor();
     ~MidiDiffAudioProcessor() override;
+    
+    std::function<void(int)> updateMidiNotesLabel;
+    int midiNoteCounter = 0;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;

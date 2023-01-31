@@ -16,6 +16,11 @@ MidiDiffAudioProcessorEditor::MidiDiffAudioProcessorEditor (MidiDiffAudioProcess
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+    startTimer(50);
+    audioProcessor.updateMidiNotesLabel = [this](int noteNumber)
+    {
+        lastMidiNotesLabel.setText(juce::String(noteNumber), juce::dontSendNotification);
+    };
 }
 
 MidiDiffAudioProcessorEditor::~MidiDiffAudioProcessorEditor()
@@ -25,16 +30,17 @@ MidiDiffAudioProcessorEditor::~MidiDiffAudioProcessorEditor()
 //==============================================================================
 void MidiDiffAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    addAndMakeVisible(midiNoteCounterLabel);
+    midiNoteCounterLabel.setFont(juce::Font(16.0f, juce::Font::bold));
+    midiNoteCounterLabel.setColour(juce::Label::textColourId, juce::Colours::lightgreen);
 
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    addAndMakeVisible(lastMidiNotesLabel);
+    lastMidiNotesLabel.setFont(juce::Font(16.0f, juce::Font::bold));
+    lastMidiNotesLabel.setColour(juce::Label::textColourId, juce::Colours::lightgreen);
 }
 
 void MidiDiffAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    midiNoteCounterLabel.setBounds(10, 10, getWidth() - 20, 30);
+    lastMidiNotesLabel.setBounds(10, 50, getWidth() - 20, 30);
 }

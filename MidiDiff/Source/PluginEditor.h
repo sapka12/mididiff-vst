@@ -14,7 +14,7 @@
 //==============================================================================
 /**
 */
-class MidiDiffAudioProcessorEditor  : public juce::AudioProcessorEditor
+class MidiDiffAudioProcessorEditor  : public juce::AudioProcessorEditor, private juce::Timer
 {
 public:
     MidiDiffAudioProcessorEditor (MidiDiffAudioProcessor&);
@@ -25,9 +25,13 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     MidiDiffAudioProcessor& audioProcessor;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiDiffAudioProcessorEditor)
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiDiffAudioProcessorEditor)
+    juce::Label lastMidiNotesLabel = juce::Label();
+    juce::Label midiNoteCounterLabel = juce::Label();
+
+    void timerCallback() final {
+        midiNoteCounterLabel.setText(juce::String(audioProcessor.midiNoteCounter), juce::dontSendNotification);
+    }
 };
