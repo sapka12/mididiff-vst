@@ -8,6 +8,8 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <iostream>
+#include <chrono>
 
 //==============================================================================
 MidiDiffAudioProcessor::MidiDiffAudioProcessor()
@@ -22,6 +24,7 @@ MidiDiffAudioProcessor::MidiDiffAudioProcessor()
                        )
 #endif
 {
+    m_flogger = std::unique_ptr<juce::FileLogger>(juce::FileLogger::createDateStampedLogger("MidiDiffPlugin", "mididiff-log", ".txt", "Example message"));
 }
 
 MidiDiffAudioProcessor::~MidiDiffAudioProcessor()
@@ -129,19 +132,49 @@ bool MidiDiffAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
 }
 #endif
 
+long toLong(double d) {
+    return long(round(1000 * d));
+}
+
 void MidiDiffAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    using namespace std::chrono;
+    long epoch = long(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
+
     for (const auto midiMessage : midiMessages) {
         auto message = midiMessage.getMessage();
-        if (message.isNoteOn())
+        auto messageTimestamp = toLong(message.getTimeStamp());
+
+        auto isNoteOn = message.isNoteOn();
+        auto isReferenceChannel = message.getChannel() == midiChannelReference;
+        auto isPerformanceChannel = message.getChannel() == midiChannelPerformance;
+
+        if (isNoteOn && (isReferenceChannel || isPerformanceChannel))
         {
             midiNoteCounter++;
+            auto noteNumber = message.getNoteNumber();
+
+            auto currentTimestamp = epoch + (messageTimestamp/1000);
+
             juce::MessageManager::callAsync([=]()
                 {
-                    updateMidiNotesLabel(message.getNoteNumber());
+                    updateMidiNotesLabel(noteNumber);
                 });
+            
+
+
+            if (isReferenceChannel) {
+                midiDiff.controlMidiEvents.push_back(make_tuple(currentTimestamp, noteNumber));
+                //log("note [cont " + juce::String(epoch) + " " + juce::String(messageTimestamp) + "]: " + juce::String(noteNumber));
+            }
+            else if (isPerformanceChannel) {
+                //log("note [pref " + juce::String(epoch) + " " + juce::String(messageTimestamp) + "]: " + juce::String(noteNumber));
+                midiDiff.performanceMidiEvents.push_back(make_tuple(currentTimestamp, noteNumber));
+            }
         }
     }
+
+    lastBufferStartEpochMillis = epoch;
 }
 
 //==============================================================================
