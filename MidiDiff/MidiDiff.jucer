@@ -3,7 +3,7 @@
 <JUCERPROJECT id="LtnViU" name="MidiDiff" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="arnfarkas" pluginFormats="buildVST3" pluginCharacteristicsValue="pluginWantsMidiIn"
-              pluginVST3Category="Analyzer">
+              pluginVST3Category="Analyzer" pluginName="MidiDiff.v0.0.3">
   <MAINGROUP id="HM64eh" name="MidiDiff">
     <GROUP id="{E1B012A5-0ACB-0789-1A9E-948B69F27BF1}" name="Source">
       <FILE id="Lmc58F" name="PluginProcessor.cpp" compile="1" resource="0"

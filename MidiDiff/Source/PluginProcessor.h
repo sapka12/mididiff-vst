@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "MidiDiff.h"
 
 //==============================================================================
 /**
@@ -25,6 +26,19 @@ public:
     
     std::function<void(int)> updateMidiNotesLabel;
     int midiNoteCounter = 0;
+
+    int midiChannelReference = 1;
+    int midiChannelPerformance = 2;
+
+    std::unique_ptr<juce::FileLogger> m_flogger;
+
+    MidiDiff midiDiff;
+
+    void resetMidiCounters() {
+        midiNoteCounter = 0;
+        midiDiff.controlMidiEvents.clear();
+        midiDiff.performanceMidiEvents.clear();
+    }
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -60,6 +74,14 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+    long lastBufferStartEpochMillis;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiDiffAudioProcessor)
+
+    void log(juce::String message) {
+        if (m_flogger) {
+            m_flogger->logMessage(message);
+        }
+    }
 };
