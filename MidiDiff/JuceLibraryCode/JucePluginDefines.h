@@ -41,16 +41,16 @@
  #define JucePlugin_Enable_ARA             0
 #endif
 #ifndef  JucePlugin_Name
- #define JucePlugin_Name                   "MidiDiff.v0.0.3"
+ #define JucePlugin_Name                   "MidiDiff"
 #endif
 #ifndef  JucePlugin_Desc
  #define JucePlugin_Desc                   "MidiDiff"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "arnfarkas"
+ #define JucePlugin_Manufacturer           "ArnFarkas"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
- #define JucePlugin_ManufacturerWebsite    "www.arnfarkas.com"
+ #define JucePlugin_ManufacturerWebsite    "www.ArnFarkas.com"
 #endif
 #ifndef  JucePlugin_ManufacturerEmail
  #define JucePlugin_ManufacturerEmail      ""
@@ -92,7 +92,7 @@
  #define JucePlugin_VSTCategory            kPlugCategEffect
 #endif
 #ifndef  JucePlugin_Vst3Category
- #define JucePlugin_Vst3Category           "Fx|Analyzer"
+ #define JucePlugin_Vst3Category           "Fx"
 #endif
 #ifndef  JucePlugin_AUMainType
  #define JucePlugin_AUMainType             'aumf'
@@ -110,10 +110,10 @@
  #define JucePlugin_AUManufacturerCode     JucePlugin_ManufacturerCode
 #endif
 #ifndef  JucePlugin_CFBundleIdentifier
- #define JucePlugin_CFBundleIdentifier     com.arnfarkas.MidiDiff
+ #define JucePlugin_CFBundleIdentifier     com.ArnFarkas.MidiDiff
 #endif
 #ifndef  JucePlugin_AAXIdentifier
- #define JucePlugin_AAXIdentifier          com.arnfarkas.MidiDiff
+ #define JucePlugin_AAXIdentifier          com.ArnFarkas.MidiDiff
 #endif
 #ifndef  JucePlugin_AAXManufacturerCode
  #define JucePlugin_AAXManufacturerCode    JucePlugin_ManufacturerCode
@@ -137,7 +137,7 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "arnfarkas: MidiDiff.v0.0.3"
+ #define JucePlugin_IAAName                "ArnFarkas: MidiDiff"
 #endif
 #ifndef  JucePlugin_VSTNumMidiInputs
  #define JucePlugin_VSTNumMidiInputs       16
@@ -152,10 +152,10 @@
  #define JucePlugin_ARATransformationFlags  0
 #endif
 #ifndef  JucePlugin_ARAFactoryID
- #define JucePlugin_ARAFactoryID           "com.arnfarkas.MidiDiff.factory"
+ #define JucePlugin_ARAFactoryID           "com.ArnFarkas.MidiDiff.factory"
 #endif
 #ifndef  JucePlugin_ARADocumentArchiveID
- #define JucePlugin_ARADocumentArchiveID   "com.arnfarkas.MidiDiff.aradocumentarchive.1.0.0"
+ #define JucePlugin_ARADocumentArchiveID   "com.ArnFarkas.MidiDiff.aradocumentarchive.1.0.0"
 #endif
 #ifndef  JucePlugin_ARACompatibleArchiveIDs
  #define JucePlugin_ARACompatibleArchiveIDs  ""

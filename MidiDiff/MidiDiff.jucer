@@ -2,10 +2,12 @@
 
 <JUCERPROJECT id="LtnViU" name="MidiDiff" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="arnfarkas" pluginFormats="buildVST3" pluginCharacteristicsValue="pluginWantsMidiIn"
-              pluginVST3Category="Analyzer" pluginName="MidiDiff.v0.0.3">
+              companyName="ArnFarkas" pluginFormats="buildVST3" pluginCharacteristicsValue="pluginWantsMidiIn"
+              pluginVST3Category="Fx" pluginName="MidiDiff">
   <MAINGROUP id="HM64eh" name="MidiDiff">
     <GROUP id="{E1B012A5-0ACB-0789-1A9E-948B69F27BF1}" name="Source">
+      <FILE id="vdRLgr" name="MidiDiff.cpp" compile="1" resource="0" file="Source/MidiDiff.cpp"/>
+      <FILE id="g0D10V" name="MidiDiff.h" compile="0" resource="0" file="Source/MidiDiff.h"/>
       <FILE id="Lmc58F" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="LftRr5" name="PluginProcessor.h" compile="0" resource="0"
