@@ -18,11 +18,6 @@ MidiDiffAudioProcessorEditor::MidiDiffAudioProcessorEditor (MidiDiffAudioProcess
     // editor's size to whatever you need it to be.
     setSize (400, 300);
     
-    audioProcessor.updateMidiNotesLabel = [this](int noteNumber)
-    {
-        lastMidiNotesDisplay.setText(juce::String(noteNumber), juce::dontSendNotification);
-    };
-
     //controlMidiChannel
     addAndMakeVisible(controlMidiChannelLabel);
     initLabel(controlMidiChannelLabel);
@@ -71,27 +66,10 @@ MidiDiffAudioProcessorEditor::~MidiDiffAudioProcessorEditor()
 //==============================================================================
 void MidiDiffAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    addAndMakeVisible(lastMidiNotesLabel);
-    initLabel(lastMidiNotesLabel);
-
-    addAndMakeVisible(lastMidiNotesDisplay);
-    initLabel(lastMidiNotesDisplay);
-
-    addAndMakeVisible(midiNoteCounterLabel);
-    initLabel(midiNoteCounterLabel);
-
-    addAndMakeVisible(midiNoteCounterDisplay);
-    initLabel(midiNoteCounterDisplay);
 }
 
 void MidiDiffAudioProcessorEditor::resized()
 {
-    lastMidiNotesLabel.setBounds(10, 10, 240, 30);
-    lastMidiNotesDisplay.setBounds(260, 10, 80, 30);
-
-    midiNoteCounterLabel.setBounds(10, 50, 240, 30);
-    midiNoteCounterDisplay.setBounds(260, 50, 80, 30);
-
     controlMidiChannelLabel.setBounds(10, 90, 240, 30);
     controlMidiChannelSelector.setBounds(260, 90, 80, 30);
 

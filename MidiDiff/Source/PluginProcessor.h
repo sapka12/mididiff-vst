@@ -9,7 +9,8 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "MidiDiff.h"
+using namespace std;
+typedef vector< tuple<long, int> > EventListType;
 
 //==============================================================================
 /**
@@ -24,20 +25,14 @@ public:
     MidiDiffAudioProcessor();
     ~MidiDiffAudioProcessor() override;
     
-    std::function<void(int)> updateMidiNotesLabel;
-    int midiNoteCounter = 0;
-
     int midiChannelReference = 1;
     int midiChannelPerformance = 2;
 
     std::unique_ptr<juce::FileLogger> m_flogger;
 
-    MidiDiff midiDiff;
-
     void resetMidiCounters() {
-        midiNoteCounter = 0;
-        midiDiff.controlMidiEvents.clear();
-        midiDiff.performanceMidiEvents.clear();
+        controlMidiEvents.clear();
+        performanceMidiEvents.clear();
     }
 
     //==============================================================================
@@ -73,8 +68,46 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+
+    EventListType controlMidiEvents;
+    EventListType performanceMidiEvents;
+
+    double percentageOfPerformance(int thresholdMs) {
+        auto& control = controlMidiEvents;
+        auto& perform = performanceMidiEvents;
+
+        long sumOfDistances = 0;
+        for (const tuple<long, int> controlEvt : control) {
+            long eventTime = std::get<0>(controlEvt);
+            int midiNote = std::get<1>(controlEvt);
+            sumOfDistances += differenceOfSameNotes(eventTime, midiNote, perform, thresholdMs);
+        }
+
+        auto noControl = control.size() == 0;
+        if (noControl) {
+            return 0;
+        }
+
+        double averageDistance = sumOfDistances * 1.0 / control.size();
+        double percentage = 100 - (averageDistance * 100.0 / thresholdMs);
+        return percentage;
+    };
+
 private:
     long currentBufferEventTimeStartEpochMillis;
+
+    int differenceOfSameNotes(long controlTime, int controlMidiNote, EventListType currentMidiEvents, int threshold) {
+        int minDistance = threshold;
+        for (const tuple<long, int> midiEvt : currentMidiEvents) {
+            long eventTime = std::get<0>(midiEvt);
+            int midiNote = std::get<1>(midiEvt);
+            int currentDistance = abs(controlTime - eventTime);
+            if (controlMidiNote == midiNote && currentDistance < minDistance) {
+                minDistance = currentDistance;
+            }
+        }
+        return minDistance;
+    };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiDiffAudioProcessor)

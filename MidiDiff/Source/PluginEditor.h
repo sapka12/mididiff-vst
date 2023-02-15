@@ -33,12 +33,6 @@ private:
     MidiDiffAudioProcessor& audioProcessor;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiDiffAudioProcessorEditor)
 
-    juce::Label lastMidiNotesLabel{ {}, "Last MIDI Note" };
-    juce::Label lastMidiNotesDisplay;
-
-    juce::Label midiNoteCounterLabel{ {}, "MIDI Note Counter" };
-    juce::Label midiNoteCounterDisplay;
-
     juce::Label controlMidiChannelLabel{ {}, "Control MIDI Channel" };
     juce::ComboBox controlMidiChannelSelector;
 
@@ -47,7 +41,7 @@ private:
 
     juce::Label thresholdLabel{ {}, "Threshold (ms)" };
     juce::ComboBox thresholdSelector;
-    int threshold = 200;
+    int threshold = 100;
 
     juce::TextButton percentageButton = juce::TextButton("percentage");
 
@@ -65,9 +59,7 @@ private:
     }
 
     void timerCallback() final {
-        midiNoteCounterDisplay.setText(juce::String(audioProcessor.midiNoteCounter), juce::dontSendNotification);
-
-        auto percentage = int(audioProcessor.midiDiff.percentageOfPerformance(threshold));
-        percentageButton.setButtonText(juce::String(percentage));
+        auto percentage = int(audioProcessor.percentageOfPerformance(threshold));
+        percentageButton.setButtonText(juce::String(percentage) + "%");
     }
 };

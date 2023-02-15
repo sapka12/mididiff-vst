@@ -150,32 +150,21 @@ void MidiDiffAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 
         if (isNoteOn && (isReferenceChannel || isPerformanceChannel))
         {
-            auto messageTimestamp = toLong(message.getTimeStamp());
-            auto noteNumber = message.getNoteNumber();
-            auto messageTimestampSec = toLong(messageTimestamp / rate);
-            auto currentTimestamp = currentBufferEventTimeStartEpochMillis + (messageTimestampSec / 1000);
-
-            juce::MessageManager::callAsync([=]()
-                {
-                    updateMidiNotesLabel(noteNumber);
-                });
-            
+            long messageTimestamp = toLong(message.getTimeStamp());
+            int noteNumber = message.getNoteNumber();
+            long messageTimestampSec = toLong(messageTimestamp / rate);
+            long midiEventTimestamp = currentBufferEventTimeStartEpochMillis + (messageTimestampSec / 1000);
             
             if (isReferenceChannel) {
-                midiDiff.controlMidiEvents.push_back(make_tuple(currentTimestamp, noteNumber));
-                //log(juce::String(currentTimestamp) + " ref  [epoch: " + juce::String(epoch) + ",  messageTimestamp: " + juce::String(messageTimestamp) + "] delayInSec: " + juce::String(messageTimestampSec));
-                midiNoteCounter++;
+                controlMidiEvents.push_back(make_tuple(midiEventTimestamp, noteNumber));
             }
             else if (isPerformanceChannel) {
-                midiDiff.performanceMidiEvents.push_back(make_tuple(currentTimestamp, noteNumber));
-                //log(juce::String(currentTimestamp) + " pref [epoch: " + juce::String(epoch) + ",  messageTimestamp: " + juce::String(messageTimestamp) + "] delayInSec: " + juce::String(messageTimestampSec));
-                midiNoteCounter++;
+                performanceMidiEvents.push_back(make_tuple(midiEventTimestamp, noteNumber));
             }
         }
     }
 
     long end = long(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
-    //log("cycle [start: " + juce::String(epoch) + " end:" + juce::String(end));
     currentBufferEventTimeStartEpochMillis = epoch;
 }
 
