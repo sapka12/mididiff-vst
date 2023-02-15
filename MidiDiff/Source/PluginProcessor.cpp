@@ -136,45 +136,47 @@ long toLong(double d) {
     return long(round(1000 * d));
 }
 
+using namespace std::chrono;
 void MidiDiffAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    using namespace std::chrono;
     long epoch = long(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
+    auto rate = getSampleRate();
 
     for (const auto midiMessage : midiMessages) {
         auto message = midiMessage.getMessage();
-        auto messageTimestamp = toLong(message.getTimeStamp());
-
         auto isNoteOn = message.isNoteOn();
         auto isReferenceChannel = message.getChannel() == midiChannelReference;
         auto isPerformanceChannel = message.getChannel() == midiChannelPerformance;
 
         if (isNoteOn && (isReferenceChannel || isPerformanceChannel))
         {
-            midiNoteCounter++;
+            auto messageTimestamp = toLong(message.getTimeStamp());
             auto noteNumber = message.getNoteNumber();
-
-            auto currentTimestamp = epoch + (messageTimestamp/1000);
+            auto messageTimestampSec = toLong(messageTimestamp / rate);
+            auto currentTimestamp = currentBufferEventTimeStartEpochMillis + (messageTimestampSec / 1000);
 
             juce::MessageManager::callAsync([=]()
                 {
                     updateMidiNotesLabel(noteNumber);
                 });
             
-
-
+            
             if (isReferenceChannel) {
                 midiDiff.controlMidiEvents.push_back(make_tuple(currentTimestamp, noteNumber));
-                //log("note [cont " + juce::String(epoch) + " " + juce::String(messageTimestamp) + "]: " + juce::String(noteNumber));
+                log(juce::String(currentTimestamp) + " ref  [epoch: " + juce::String(epoch) + ",  messageTimestamp: " + juce::String(messageTimestamp) + "] delayInSec: " + juce::String(messageTimestampSec));
+                midiNoteCounter++;
             }
             else if (isPerformanceChannel) {
-                //log("note [pref " + juce::String(epoch) + " " + juce::String(messageTimestamp) + "]: " + juce::String(noteNumber));
                 midiDiff.performanceMidiEvents.push_back(make_tuple(currentTimestamp, noteNumber));
+                log(juce::String(currentTimestamp) + " pref [epoch: " + juce::String(epoch) + ",  messageTimestamp: " + juce::String(messageTimestamp) + "] delayInSec: " + juce::String(messageTimestampSec));
+                midiNoteCounter++;
             }
         }
     }
 
-    lastBufferStartEpochMillis = epoch;
+    long end = long(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
+    //log("cycle [start: " + juce::String(epoch) + " end:" + juce::String(end));
+    currentBufferEventTimeStartEpochMillis = epoch;
 }
 
 //==============================================================================
