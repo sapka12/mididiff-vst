@@ -163,12 +163,12 @@ void MidiDiffAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
             
             if (isReferenceChannel) {
                 midiDiff.controlMidiEvents.push_back(make_tuple(currentTimestamp, noteNumber));
-                log(juce::String(currentTimestamp) + " ref  [epoch: " + juce::String(epoch) + ",  messageTimestamp: " + juce::String(messageTimestamp) + "] delayInSec: " + juce::String(messageTimestampSec));
+                //log(juce::String(currentTimestamp) + " ref  [epoch: " + juce::String(epoch) + ",  messageTimestamp: " + juce::String(messageTimestamp) + "] delayInSec: " + juce::String(messageTimestampSec));
                 midiNoteCounter++;
             }
             else if (isPerformanceChannel) {
                 midiDiff.performanceMidiEvents.push_back(make_tuple(currentTimestamp, noteNumber));
-                log(juce::String(currentTimestamp) + " pref [epoch: " + juce::String(epoch) + ",  messageTimestamp: " + juce::String(messageTimestamp) + "] delayInSec: " + juce::String(messageTimestampSec));
+                //log(juce::String(currentTimestamp) + " pref [epoch: " + juce::String(epoch) + ",  messageTimestamp: " + juce::String(messageTimestamp) + "] delayInSec: " + juce::String(messageTimestampSec));
                 midiNoteCounter++;
             }
         }
