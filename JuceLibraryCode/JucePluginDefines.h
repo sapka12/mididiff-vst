@@ -17,7 +17,7 @@
  #define JucePlugin_Build_VST3             1
 #endif
 #ifndef  JucePlugin_Build_AU
- #define JucePlugin_Build_AU               0
+ #define JucePlugin_Build_AU               1
 #endif
 #ifndef  JucePlugin_Build_AUv3
  #define JucePlugin_Build_AUv3             0
@@ -26,7 +26,7 @@
  #define JucePlugin_Build_AAX              0
 #endif
 #ifndef  JucePlugin_Build_Standalone
- #define JucePlugin_Build_Standalone       0
+ #define JucePlugin_Build_Standalone       1
 #endif
 #ifndef  JucePlugin_Build_Unity
  #define JucePlugin_Build_Unity            0
@@ -47,10 +47,10 @@
  #define JucePlugin_Desc                   "MidiDiff"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "ArnFarkas"
+ #define JucePlugin_Manufacturer           "arnfarkas"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
- #define JucePlugin_ManufacturerWebsite    "www.ArnFarkas.com"
+ #define JucePlugin_ManufacturerWebsite    "www.arnfarkas.com"
 #endif
 #ifndef  JucePlugin_ManufacturerEmail
  #define JucePlugin_ManufacturerEmail      ""
@@ -59,7 +59,7 @@
  #define JucePlugin_ManufacturerCode       0x4d616e75
 #endif
 #ifndef  JucePlugin_PluginCode
- #define JucePlugin_PluginCode             0x4c746e76
+ #define JucePlugin_PluginCode             0x44333664
 #endif
 #ifndef  JucePlugin_IsSynth
  #define JucePlugin_IsSynth                0
@@ -68,10 +68,10 @@
  #define JucePlugin_WantsMidiInput         1
 #endif
 #ifndef  JucePlugin_ProducesMidiOutput
- #define JucePlugin_ProducesMidiOutput     0
+ #define JucePlugin_ProducesMidiOutput     1
 #endif
 #ifndef  JucePlugin_IsMidiEffect
- #define JucePlugin_IsMidiEffect           0
+ #define JucePlugin_IsMidiEffect           1
 #endif
 #ifndef  JucePlugin_EditorRequiresKeyboardFocus
  #define JucePlugin_EditorRequiresKeyboardFocus  0
@@ -95,7 +95,7 @@
  #define JucePlugin_Vst3Category           "Fx"
 #endif
 #ifndef  JucePlugin_AUMainType
- #define JucePlugin_AUMainType             'aumf'
+ #define JucePlugin_AUMainType             'aumi'
 #endif
 #ifndef  JucePlugin_AUSubType
  #define JucePlugin_AUSubType              JucePlugin_PluginCode
@@ -110,10 +110,10 @@
  #define JucePlugin_AUManufacturerCode     JucePlugin_ManufacturerCode
 #endif
 #ifndef  JucePlugin_CFBundleIdentifier
- #define JucePlugin_CFBundleIdentifier     com.ArnFarkas.MidiDiff
+ #define JucePlugin_CFBundleIdentifier     com.arnfarkas.MidiDiff
 #endif
 #ifndef  JucePlugin_AAXIdentifier
- #define JucePlugin_AAXIdentifier          com.ArnFarkas.MidiDiff
+ #define JucePlugin_AAXIdentifier          com.arnfarkas.MidiDiff
 #endif
 #ifndef  JucePlugin_AAXManufacturerCode
  #define JucePlugin_AAXManufacturerCode    JucePlugin_ManufacturerCode
@@ -137,7 +137,7 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "ArnFarkas: MidiDiff"
+ #define JucePlugin_IAAName                "arnfarkas: MidiDiff"
 #endif
 #ifndef  JucePlugin_VSTNumMidiInputs
  #define JucePlugin_VSTNumMidiInputs       16
@@ -152,10 +152,10 @@
  #define JucePlugin_ARATransformationFlags  0
 #endif
 #ifndef  JucePlugin_ARAFactoryID
- #define JucePlugin_ARAFactoryID           "com.ArnFarkas.MidiDiff.factory"
+ #define JucePlugin_ARAFactoryID           "com.arnfarkas.MidiDiff.factory"
 #endif
 #ifndef  JucePlugin_ARADocumentArchiveID
- #define JucePlugin_ARADocumentArchiveID   "com.ArnFarkas.MidiDiff.aradocumentarchive.1.0.0"
+ #define JucePlugin_ARADocumentArchiveID   "com.arnfarkas.MidiDiff.aradocumentarchive.1.0.0"
 #endif
 #ifndef  JucePlugin_ARACompatibleArchiveIDs
  #define JucePlugin_ARACompatibleArchiveIDs  ""
