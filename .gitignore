@@ -1,1 +1,3 @@
-MidiDiff/Builds/*
+.idea/*
+.vs/*
+Builds/*
