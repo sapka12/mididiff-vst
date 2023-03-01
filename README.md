@@ -7,3 +7,30 @@ This VST plugin calculates the differences of two midi channels and provides a r
 
 ## Download
 - [Win11 x64 Build - v1.0.0](https://drive.google.com/file/d/1viC7pc_4ZtGl5Vl69Luy7xQJX7kZkO93/view?usp=share_link)
+
+## Usage
+### Cakewalk
+- Copy MidiDiff.vst into your VST folder
+- Insert Audio Track
+- Insert Audio FX: arnfarkas/MidiDiff
+- On the plugin's UI, under VST3: check Enable MIDI Input
+- Insert MIDI Track and set its output to MidiDiff
+- Record/quantize or copy a reference MIDI
+  - Optionally: change all the reference MIDI events to a specific channel (you can use Cakewalk's Event Inspector)
+- Play the same notes on another MIDI channel
+- MidiDiff's UI shows the accurance of the performance in percentage
+
+## Score Calculating
+For each "onNote" reference MIDI event finds timely the closest MIDI event on the performance channel with the same note. The maximum of the difference will be the threshold given by the UI. The percentage is calculated based on the average difference inside the threshold.
+
+## UI Elements
+### Last Used Channel
+helps to find the source midi inputs for the control/reference and the performance
+### Control MIDI Channel
+channel of the reference MIDI notes
+### Performance MIDI Channel
+channel of the performance MIDI notes
+### Threshold
+the algorithm is looking for a match for each reference MIDI note inside this timeframe
+### Percentage Button
+displays the result score in percentage (it can be reset on click)
