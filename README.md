@@ -19,6 +19,17 @@ This VST plugin calculates the differences of two midi channels and provides a r
   - Optionally: change all the reference MIDI events to a specific channel (you can use Cakewalk's Event Inspector)
 - Play the same notes on another MIDI channel
 - MidiDiff's UI shows the accurance of the performance in percentage
+- Reset on click the percentage
+
+### Reaper
+- Copy MidiDiff.vst into your VST folder
+- Insert virtual instrument on new track
+- add FX: arnfarkas/MidiDiff
+- Record/quantize or copy a reference MIDI
+  - Optionally: change all the reference MIDI events to a specific channel (select all, right click, event properties, change channel)
+- Play the same notes on another MIDI channel
+- MidiDiff's UI shows the accurance of the performance in percentage
+- Reset on click the percentage
 
 ## Score Calculating
 For each "onNote" reference MIDI event finds timely the closest MIDI event on the performance channel with the same note. The maximum of the difference will be the threshold given by the UI. The percentage is calculated based on the average difference inside the threshold.
