@@ -208,6 +208,9 @@ private:
     {
     public:
 
+        juce::Label controlMidiChannelLabel{ {}, "Reference" };
+        juce::Label performanceMidiChannelLabel{ {}, "Performance" };
+        juce::Label thresholdLabel{ {}, "Threshold" };
         // inputs
         juce::ComboBox controlMidiChannelSelector;
         juce::ComboBox performanceMidiChannelSelector;
@@ -261,7 +264,7 @@ private:
             : AudioProcessorEditor (ownerIn),
               owner (ownerIn)
         {
-            setSize(19 * s, 11 * s);
+            setSize(19 * s, 13 * s);
 
             addAndMakeVisible(lastUsedMidiChannelLabel);
             initLabel(lastUsedMidiChannelLabel);
@@ -283,6 +286,8 @@ private:
             inThresholdText.setJustificationType(juce::Justification::centredRight);
 
             //controlMidiChannel
+            addAndMakeVisible(controlMidiChannelLabel);
+            initLabel(controlMidiChannelLabel);
             addAndMakeVisible(controlMidiChannelSelector);
             initChannels(controlMidiChannelSelector, owner.model.midiChannelReference);
             controlMidiChannelSelector.onChange = [this] {
@@ -290,6 +295,8 @@ private:
             };
 
             //performanceMidiChannel
+            addAndMakeVisible(performanceMidiChannelLabel);
+            initLabel(performanceMidiChannelLabel);
             addAndMakeVisible(performanceMidiChannelSelector);
             initChannels(performanceMidiChannelSelector, owner.model.midiChannelPerformance);
             performanceMidiChannelSelector.onChange = [this] {
@@ -297,6 +304,8 @@ private:
             };
 
             //thresholdMidiChannel
+            addAndMakeVisible(thresholdLabel);
+            initLabel(thresholdLabel);
             addAndMakeVisible(thresholdSelector);
             thresholdSelector.addItem(std::to_string(100), 1);
             thresholdSelector.addItem(std::to_string(200), 2);
@@ -311,10 +320,6 @@ private:
 
             percentageButton.addListener(this);
 
-            controlMidiChannelSelector.setHelpText("Reference MIDI Channel");
-            performanceMidiChannelSelector.setHelpText("Performance MIDI Channel");
-            thresholdSelector.setHelpText("Threshold (ms)");
-
             startTimer(1000);
         }
 
@@ -325,22 +330,24 @@ private:
 
         void resized() override
         {
-            controlMidiChannelSelector.setBounds     ( 1 * s,  1 * s,  5 * s, 1 * s);
-            performanceMidiChannelSelector.setBounds ( 7 * s,  1 * s,  5 * s, 1 * s);
-            thresholdSelector.setBounds              (13 * s,  1 * s,  5 * s, 1 * s);
+            controlMidiChannelLabel.setBounds(column(1), row(1), width(2), height(1));
+            performanceMidiChannelLabel.setBounds(column(3), row(1), width(2), height(1));
+            thresholdLabel.setBounds(column(5), row(1), width(2), height(1));
 
+            controlMidiChannelSelector.setBounds(column(1), row(2), width(2), height(1));
+            performanceMidiChannelSelector.setBounds(column(3), row(2), width(2), height(1));
+            thresholdSelector.setBounds(column(5), row(2), width(2), height(1));
 
-            lastUsedMidiChannelLabel.setBounds(1 * s, 3 * s, 5 * s, 1 * s);
-            lastUsedMidiChannelText.setBounds(7 * s, 3 * s, 11 * s, 1 * s);
+            percentageButton.setBounds(column(1), row(3), width(6), height(1));
 
-            performanceLabel.setBounds(1 * s, 5 * s, 5 * s, 1 * s);
-            performanceText.setBounds(7 * s, 5 * s, 11 * s, 1 * s);
+            lastUsedMidiChannelLabel.setBounds(column(1), row(4), width(2), height(1));
+            lastUsedMidiChannelText.setBounds(column(3), row(4), width(4), height(1));
 
-            inThresholdLabel.setBounds(1 * s, 7 * s, 5 * s, 1 * s);
-            inThresholdText.setBounds(7 * s, 7 * s, 11 * s, 1 * s);
+            performanceLabel.setBounds(column(1), row(5), width(2), height(1));
+            performanceText.setBounds(column(3), row(5), width(4), height(1));
 
-
-            percentageButton.setBounds               (1 * s, 9 * s, 17 * s, 1 * s);
+            inThresholdLabel.setBounds(column(1), row(6), width(2), height(1));
+            inThresholdText.setBounds(column(3), row(6), width(4), height(1));
         }
 
         void timerCallback() override
@@ -348,6 +355,22 @@ private:
             setData(owner.model.calculateResult());
         }
     private:
+        int row(int rowIdx) {
+            return (rowIdx * 2 - 1) * s;
+        }
+
+        int column(int colIdx) {
+            return ((colIdx - 1) * 3 + 1) * s;
+        }
+
+        int width(int size) {
+            return (3 * size - 1) * s;
+        }
+
+        int height(int size) {
+            return (2 * size - 1) * s;
+        }
+
         void valueChanged (Value&) override
         {
             setData(owner.model.calculateResult());
