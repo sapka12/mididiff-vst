@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT name="MidiDiff" companyName="arnfarkas" version="1.0.1" userNotes="Logs incoming MIDI messages."
+<JUCERPROJECT name="MidiDiff" companyName="arnfarkas" version="1.0.2" userNotes="Logs incoming MIDI messages."
               displaySplashScreen="1" defines="PIP_JUCE_EXAMPLES_DIRECTORY=RDpcbXktcHJvamVjdHNcZ2l0aHViXEpVQ0VcZXhhbXBsZXM="
               projectType="audioplug" pluginAUIsSandboxSafe="1" pluginManufacturer="arnfarkas"
               pluginFormats="buildVST3,buildAU,buildStandalone" pluginCharacteristicsValue="pluginWantsMidiIn,pluginProducesMidiOut,pluginIsMidiEffectPlugin"
@@ -51,8 +51,8 @@
     </XCODE_MAC>
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="MIDILogger"/>
-        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="MIDILogger"/>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="MidiDiff"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="MidiDiff"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path=""/>
