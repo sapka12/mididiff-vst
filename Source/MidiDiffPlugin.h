@@ -56,6 +56,33 @@ using namespace std::chrono;
 typedef vector< tuple<long, int> > EventListType;
 
 
+class MidiDiffResult
+{
+private:
+    int percentage;
+    int inThreshold;
+    int lastUsedMidiChannel;
+public:
+    MidiDiffResult(int percentage, int lastUsedMidiChannel, int inThreshold) {
+        this->percentage = percentage;
+        this->lastUsedMidiChannel = lastUsedMidiChannel;
+        this->inThreshold = inThreshold;
+    }
+    ~MidiDiffResult() {}
+
+    juce::String getPerformance() {
+        return juce::String(percentage);
+    }
+
+    juce::String getInThreshold() {
+        return juce::String(inThreshold);
+    }
+
+    int getLastUsedMidiChannel () {
+        return lastUsedMidiChannel;
+    }
+};
+
 
 class MidiDiffModel
 {
@@ -74,25 +101,30 @@ public:
         performanceMidiEvents.clear();
     }
 
-    double percentageOfPerformance() {
+    MidiDiffResult calculateResult() {
         auto& control = controlMidiEvents;
         auto& perform = performanceMidiEvents;
 
         long sumOfDistances = 0;
+        int inThresholdCount = 0;
         for (const tuple<long, int> controlEvt : control) {
             long eventTime = std::get<0>(controlEvt);
             int midiNote = std::get<1>(controlEvt);
-            sumOfDistances += differenceOfSameNotes(eventTime, midiNote, perform);
+            auto currentDiff = differenceOfSameNotes(eventTime, midiNote, perform);
+            if (currentDiff < threshold) { inThresholdCount++; }
+            sumOfDistances += currentDiff;
         }
 
-        auto noControl = control.size() == 0;
+        auto controlNoteCount = control.size();
+        auto noControl = controlNoteCount == 0;
         if (noControl) {
-            return 0;
+            return MidiDiffResult(0, lastUsedMidiChannel, 0);
         }
 
-        double averageDistance = sumOfDistances * 1.0 / control.size();
-        double percentage = 100 - (averageDistance * 100.0 / threshold);
-        return percentage;
+        int inThreshold = inThresholdCount * 100.0 / controlNoteCount;
+        double averageDistance = sumOfDistances * 1.0 / controlNoteCount;
+        int percentage = 100 - (averageDistance * 100.0 / threshold);
+        return MidiDiffResult(percentage, lastUsedMidiChannel, inThreshold);
     };
 
 private:
@@ -176,20 +208,33 @@ private:
     {
     public:
 
-        juce::Label lastUsedMidiChannelLabel{ {}, "Last Used Channel" };
-        juce::Label lastUsedMidiChannelText{ {}, "..." };
-
-        juce::Label controlMidiChannelLabel{ {}, "Control MIDI Channel" };
+        // inputs
         juce::ComboBox controlMidiChannelSelector;
-
-        juce::Label performanceMidiChannelLabel{ {}, "Performance MIDI Channel" };
         juce::ComboBox performanceMidiChannelSelector;
-
-        juce::Label thresholdLabel{ {}, "Threshold (ms)" };
         juce::ComboBox thresholdSelector;
 
-        juce::TextButton percentageButton = juce::TextButton("percentage");
-        
+        // outputs
+        juce::TextButton percentageButton = juce::TextButton("Reset");
+
+        juce::Label lastUsedMidiChannelLabel{ {}, "Last Used Channel" };
+        juce::Label lastUsedMidiChannelText{ {}, "...1" };
+
+        juce::Label performanceLabel{ {}, "Performance" };
+        juce::Label performanceText{ {}, "...2" };
+
+        juce::Label inThresholdLabel{ {}, "In Threshold" };
+        juce::Label inThresholdText{ {}, "...3" };
+
+        //operations
+        void setData(MidiDiffResult result) {
+            performanceText
+                .setText(juce::String(result.getPerformance()) + "%", juce::dontSendNotification);
+            lastUsedMidiChannelText
+                .setText(juce::String(result.getLastUsedMidiChannel()), juce::dontSendNotification);
+            inThresholdText
+                .setText(juce::String(result.getInThreshold() + "%"), juce::dontSendNotification);
+        }
+
         void buttonClicked(juce::Button* button) override
         {
             owner.model.resetMidiCounters();
@@ -216,17 +261,28 @@ private:
             : AudioProcessorEditor (ownerIn),
               owner (ownerIn)
         {
-            setSize(400, 300);
-            //lastUsedMidiChannel
+            setSize(19 * s, 11 * s);
+
             addAndMakeVisible(lastUsedMidiChannelLabel);
-            addAndMakeVisible(lastUsedMidiChannelText);
             initLabel(lastUsedMidiChannelLabel);
+            addAndMakeVisible(lastUsedMidiChannelText);
             initLabel(lastUsedMidiChannelText);
+            lastUsedMidiChannelText.setJustificationType(juce::Justification::centredRight);
+
+
+            addAndMakeVisible(performanceLabel);
+            initLabel(performanceLabel);
+            addAndMakeVisible(performanceText);
+            initLabel(performanceText);
+            performanceText.setJustificationType(juce::Justification::centredRight);
+
+            addAndMakeVisible(inThresholdLabel);
+            initLabel(inThresholdLabel);
+            addAndMakeVisible(inThresholdText);
+            initLabel(inThresholdText);
+            inThresholdText.setJustificationType(juce::Justification::centredRight);
 
             //controlMidiChannel
-            addAndMakeVisible(controlMidiChannelLabel);
-            initLabel(controlMidiChannelLabel);
-
             addAndMakeVisible(controlMidiChannelSelector);
             initChannels(controlMidiChannelSelector, owner.model.midiChannelReference);
             controlMidiChannelSelector.onChange = [this] {
@@ -234,9 +290,6 @@ private:
             };
 
             //performanceMidiChannel
-            addAndMakeVisible(performanceMidiChannelLabel);
-            initLabel(performanceMidiChannelLabel);
-
             addAndMakeVisible(performanceMidiChannelSelector);
             initChannels(performanceMidiChannelSelector, owner.model.midiChannelPerformance);
             performanceMidiChannelSelector.onChange = [this] {
@@ -244,9 +297,6 @@ private:
             };
 
             //thresholdMidiChannel
-            addAndMakeVisible(thresholdLabel);
-            initLabel(thresholdLabel);
-
             addAndMakeVisible(thresholdSelector);
             thresholdSelector.addItem(std::to_string(100), 1);
             thresholdSelector.addItem(std::to_string(200), 2);
@@ -261,6 +311,10 @@ private:
 
             percentageButton.addListener(this);
 
+            controlMidiChannelSelector.setHelpText("Reference MIDI Channel");
+            performanceMidiChannelSelector.setHelpText("Performance MIDI Channel");
+            thresholdSelector.setHelpText("Threshold (ms)");
+
             startTimer(1000);
         }
 
@@ -271,35 +325,36 @@ private:
 
         void resized() override
         {
-            lastUsedMidiChannelLabel.setBounds(10, 50, 240, 30);
-            lastUsedMidiChannelText.setBounds(260, 50, 80, 30);
+            controlMidiChannelSelector.setBounds     ( 1 * s,  1 * s,  5 * s, 1 * s);
+            performanceMidiChannelSelector.setBounds ( 7 * s,  1 * s,  5 * s, 1 * s);
+            thresholdSelector.setBounds              (13 * s,  1 * s,  5 * s, 1 * s);
 
-            controlMidiChannelLabel.setBounds(10, 90, 240, 30);
-            controlMidiChannelSelector.setBounds(260, 90, 80, 30);
 
-            performanceMidiChannelLabel.setBounds(10, 130, 240, 30);
-            performanceMidiChannelSelector.setBounds(260, 130, 80, 30);
+            lastUsedMidiChannelLabel.setBounds(1 * s, 3 * s, 5 * s, 1 * s);
+            lastUsedMidiChannelText.setBounds(7 * s, 3 * s, 11 * s, 1 * s);
 
-            thresholdLabel.setBounds(10, 170, 240, 30);
-            thresholdSelector.setBounds(260, 170, 80, 30);
+            performanceLabel.setBounds(1 * s, 5 * s, 5 * s, 1 * s);
+            performanceText.setBounds(7 * s, 5 * s, 11 * s, 1 * s);
 
-            percentageButton.setBounds(10, 210, 120, 40);
+            inThresholdLabel.setBounds(1 * s, 7 * s, 5 * s, 1 * s);
+            inThresholdText.setBounds(7 * s, 7 * s, 11 * s, 1 * s);
+
+
+            percentageButton.setBounds               (1 * s, 9 * s, 17 * s, 1 * s);
         }
 
         void timerCallback() override
         {
-            auto percentage = int(owner.model.percentageOfPerformance());
-            percentageButton.setButtonText(juce::String(percentage) + "%");
-            lastUsedMidiChannelText.setText(juce::String(owner.model.lastUsedMidiChannel), juce::dontSendNotification);
+            setData(owner.model.calculateResult());
         }
     private:
         void valueChanged (Value&) override
         {
-            auto percentage = int(owner.model.percentageOfPerformance());
-            percentageButton.setButtonText(juce::String(percentage) + "%");
+            setData(owner.model.calculateResult());
         }
 
         MidiDiffPluginProcessor& owner;
+        int s = 25;
     };
 
     template <typename Element>

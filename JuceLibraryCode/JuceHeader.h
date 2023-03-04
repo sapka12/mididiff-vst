@@ -47,7 +47,7 @@ namespace ProjectInfo
 {
     const char* const  projectName    = "MidiDiff";
     const char* const  companyName    = "arnfarkas";
-    const char* const  versionString  = "1.0.0";
-    const int          versionNumber  = 0x10000;
+    const char* const  versionString  = "1.0.1";
+    const int          versionNumber  = 0x10001;
 }
 #endif

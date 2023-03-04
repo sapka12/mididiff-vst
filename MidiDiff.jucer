@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT name="MidiDiff" companyName="arnfarkas" version="1.0.0" userNotes="Logs incoming MIDI messages."
+<JUCERPROJECT name="MidiDiff" companyName="arnfarkas" version="1.0.1" userNotes="Logs incoming MIDI messages."
               displaySplashScreen="1" defines="PIP_JUCE_EXAMPLES_DIRECTORY=RDpcbXktcHJvamVjdHNcZ2l0aHViXEpVQ0VcZXhhbXBsZXM="
               projectType="audioplug" pluginAUIsSandboxSafe="1" pluginManufacturer="arnfarkas"
               pluginFormats="buildVST3,buildAU,buildStandalone" pluginCharacteristicsValue="pluginWantsMidiIn,pluginProducesMidiOut,pluginIsMidiEffectPlugin"
